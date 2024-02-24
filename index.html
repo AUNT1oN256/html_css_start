@@ -1,14 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Канвас с падающими кругами</title>
 </head>
 <body>
-    <h1>Anton</h1>
-    <h1>Mironets</h1>
-    <h1>Tabble tennis</h1>
-    <h1>14</h1>
+    <canvas id="canvas" width="2560" height="1440" style="border: 1px solid black;"></canvas>
+    <script>
+        // Получаем элемент канваса по его ID
+        var canvas = document.getElementById("canvas");
+        // Получаем контекст для рисования на канвасе
+        var ctx = canvas.getContext("2d");
+        // Создаем массив для хранения информации о кругах
+        var circles = [];
+        // Функция для генерации случайного цвета в формате RGB
+        function randomColor(){
+            // Генерируем три случайных числа от 0 до 255
+            var r = Math.floor(Math.random() * 256);
+            var g = Math.floor(Math.random() * 256);
+            var b = Math.floor(Math.random() * 256);
+            // Возвращаем строку вида "rgb(r, g, b)"
+            return "rgb(" + r + ", " + g + ", " + b + ")";
+        }
+        // Функция для генерации случайного радиуса от 10 до 100 пикселей
+        function randomRadius(){
+            // Генерируем случайное число от 10 до 100
+            var r = Math.floor(Math.random() * 91) + 10;
+            // Возвращаем число
+            return r;
+        }
+        // Функция для обработки события клика по канвасу
+        function onCanvasClick(e){
+            // Создаем объект с информацией о круге
+            var circle = {
+                x: e.clientX, // координата X центра круга
+                y: e.clientY, // координата Y центра круга
+                r: randomRadius(), // радиус круга
+                c: randomColor(), // цвет круга
+                vy: 0 // скорость по оси Y
+            };
+            // Добавляем объект в массив кругов
+            circles.push(circle);
+        }
+        // Функция для обновления положения и отрисовки кругов
+        function updateCircles(){
+            // Очищаем канвас
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Перебираем все круги в массиве
+            for (var i = 0; i < circles.length; i++){
+                // Получаем текущий круг
+                var circle = circles[i];
+                // Задаем цвет заливки
+                ctx.fillStyle = circle.c;
+                // Начинаем рисовать новый путь
+                ctx.beginPath();
+                // Рисуем дугу (круг) с текущими параметрами
+                ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
+                // Заполняем путь цветом
+                ctx.fill();
+                // Увеличиваем скорость круга по оси Y на 0.5 пикселя за кадр
+                circle.vy += 0.5;
+                // Обновляем координату круга по оси Y с учетом скорости
+                circle.y += circle.vy;
+                // Проверяем, не вышел ли круг за нижнюю границу канваса
+                // Если да, то удаляем круг из массива
+                if (circle.y - circle.r > canvas.height){
+                    circles.splice(i, 1);
+                    i--;
+                }
+            }
+            // Запрашиваем новый кадр анимации
+            requestAnimationFrame(updateCircles);
+        }
+        // Добавляем обработчик события клика по канвасу
+        canvas.addEventListener("click", onCanvasClick);
+        // Запускаем функцию обновления кругов
+        updateCircles();
+    </script>
 </body>
 </html>
