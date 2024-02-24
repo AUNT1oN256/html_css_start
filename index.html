@@ -2,10 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Канвас с падающими кругами</title>
+    <title>Канвас с движущимися кругами</title>
 </head>
 <body>
-    <canvas id="canvas" width="2560" height="1440" style="border: 1px solid black;"></canvas>
+    <canvas id="canvas" width="600" height="600" style="border: 1px solid black;"></canvas>
     <script>
         // Получаем элемент канваса по его ID
         var canvas = document.getElementById("canvas");
@@ -29,6 +29,13 @@
             // Возвращаем число
             return r;
         }
+        // Функция для генерации случайной скорости от -5 до 5 пикселей за кадр
+        function randomSpeed(){
+            // Генерируем случайное число от -5 до 5
+            var s = Math.floor(Math.random() * 11) - 5;
+            // Возвращаем число
+            return s;
+        }
         // Функция для обработки события клика по канвасу
         function onCanvasClick(e){
             // Создаем объект с информацией о круге
@@ -37,7 +44,8 @@
                 y: e.clientY, // координата Y центра круга
                 r: randomRadius(), // радиус круга
                 c: randomColor(), // цвет круга
-                vy: 0 // скорость по оси Y
+                vx: randomSpeed(), // скорость по оси X
+                vy: randomSpeed() // скорость по оси Y
             };
             // Добавляем объект в массив кругов
             circles.push(circle);
@@ -58,15 +66,16 @@
                 ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
                 // Заполняем путь цветом
                 ctx.fill();
-                // Увеличиваем скорость круга по оси Y на 0.5 пикселя за кадр
-                circle.vy += 0.5;
-                // Обновляем координату круга по оси Y с учетом скорости
+                // Обновляем координаты круга с учетом скорости
+                circle.x += circle.vx;
                 circle.y += circle.vy;
-                // Проверяем, не вышел ли круг за нижнюю границу канваса
-                // Если да, то удаляем круг из массива
-                if (circle.y - circle.r > canvas.height){
-                    circles.splice(i, 1);
-                    i--;
+                // Проверяем, не вышел ли круг за границы канваса
+                // Если да, то меняем направление скорости на противоположное
+                if (circle.x - circle.r < 0 || circle.x + circle.r > canvas.width){
+                    circle.vx = -circle.vx;
+                }
+                if (circle.y - circle.r < 0 || circle.y + circle.r > canvas.height){
+                    circle.vy = -circle.vy;
                 }
             }
             // Запрашиваем новый кадр анимации
