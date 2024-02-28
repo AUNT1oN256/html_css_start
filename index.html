@@ -5,7 +5,7 @@
     <title>Канвас с движущимися кругами</title>
 </head>
 <body>
-    <canvas id="canvas" width="600" height="600" style="border: 1px solid black;"></canvas>
+    <canvas id="canvas" width="2560" height="1440" style="border: 1px solid black;"></canvas>
     <script>
         // Получаем элемент канваса по его ID
         var canvas = document.getElementById("canvas");
@@ -13,14 +13,18 @@
         var ctx = canvas.getContext("2d");
         // Создаем массив для хранения информации о кругах
         var circles = [];
-        // Функция для генерации случайного цвета в формате RGB
-        function randomColor(){
-            // Генерируем три случайных числа от 0 до 255
-            var r = Math.floor(Math.random() * 256);
-            var g = Math.floor(Math.random() * 256);
-            var b = Math.floor(Math.random() * 256);
-            // Возвращаем строку вида "rgb(r, g, b)"
-            return "rgb(" + r + ", " + g + ", " + b + ")";
+        // Создаем переменную для хранения индекса цвета
+        var colorIndex = 0;
+        // Функция для генерации чередующегося цвета в формате RGB
+        function alternateColor(){
+            // Создаем массив с двумя цветами: синим и желтым
+            var colors = ["rgb(0, 0, 255)", "rgb(255, 255, 0)"];
+            // Возвращаем цвет по индексу из массива
+            var color = colors[colorIndex];
+            // Меняем индекс на противоположный: от 0 до 1 или от 1 до 0
+            colorIndex = 1 - colorIndex;
+            // Возвращаем цвет
+            return color;
         }
         // Функция для генерации случайного радиуса от 10 до 100 пикселей
         function randomRadius(){
@@ -43,7 +47,7 @@
                 x: e.clientX, // координата X центра круга
                 y: e.clientY, // координата Y центра круга
                 r: randomRadius(), // радиус круга
-                c: randomColor(), // цвет круга
+                c: alternateColor(), // цвет круга
                 vx: randomSpeed(), // скорость по оси X
                 vy: randomSpeed() // скорость по оси Y
             };
