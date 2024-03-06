@@ -1,94 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Канвас с движущимися кругами</title>
+    <meta charset="UTF-8">
+    <title>Канвас с движущимися кругами</title>
 </head>
 <body>
-    <canvas id="canvas" width="2560" height="1440" style="border: 1px solid black;"></canvas>
-    <script>
-        // Получаем элемент канваса по его ID
-        var canvas = document.getElementById("canvas");
-        // Получаем контекст для рисования на канвасе
-        var ctx = canvas.getContext("2d");
-        // Создаем массив для хранения информации о кругах
-        var circles = [];
-        // Создаем переменную для хранения индекса цвета
-        var colorIndex = 0;
-        // Функция для генерации чередующегося цвета в формате RGB
-        function alternateColor(){
-            // Создаем массив с двумя цветами: синим и желтым
-            var colors = ["rgb(0, 0, 255)", "rgb(255, 255, 0)"];
-            // Возвращаем цвет по индексу из массива
-            var color = colors[colorIndex];
-            // Меняем индекс на противоположный: от 0 до 1 или от 1 до 0
-            colorIndex = 1 - colorIndex;
-            // Возвращаем цвет
-            return color;
-        }
-        // Функция для генерации случайного радиуса от 10 до 100 пикселей
-        function randomRadius(){
-            // Генерируем случайное число от 10 до 100
-            var r = Math.floor(Math.random() * 91) + 10;
-            // Возвращаем число
-            return r;
-        }
-        // Функция для генерации случайной скорости от -5 до 5 пикселей за кадр
-        function randomSpeed(){
-            // Генерируем случайное число от -5 до 5
-            var s = Math.floor(Math.random() * 11) - 5;
-            // Возвращаем число
-            return s;
-        }
-        // Функция для обработки события клика по канвасу
-        function onCanvasClick(e){
-            // Создаем объект с информацией о круге
-            var circle = {
-                x: e.clientX, // координата X центра круга
-                y: e.clientY, // координата Y центра круга
-                r: randomRadius(), // радиус круга
-                c: alternateColor(), // цвет круга
-                vx: randomSpeed(), // скорость по оси X
-                vy: randomSpeed() // скорость по оси Y
-            };
-            // Добавляем объект в массив кругов
-            circles.push(circle);
-        }
-        // Функция для обновления положения и отрисовки кругов
-        function updateCircles(){
-            // Очищаем канвас
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Перебираем все круги в массиве
-            for (var i = 0; i < circles.length; i++){
-                // Получаем текущий круг
-                var circle = circles[i];
-                // Задаем цвет заливки
-                ctx.fillStyle = circle.c;
-                // Начинаем рисовать новый путь
-                ctx.beginPath();
-                // Рисуем дугу (круг) с текущими параметрами
-                ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
-                // Заполняем путь цветом
-                ctx.fill();
-                // Обновляем координаты круга с учетом скорости
-                circle.x += circle.vx;
-                circle.y += circle.vy;
-                // Проверяем, не вышел ли круг за границы канваса
-                // Если да, то меняем направление скорости на противоположное
-                if (circle.x - circle.r < 0 || circle.x + circle.r > canvas.width){
-                    circle.vx = -circle.vx;
-                }
-                if (circle.y - circle.r < 0 || circle.y + circle.r > canvas.height){
-                    circle.vy = -circle.vy;
-                }
-            }
-            // Запрашиваем новый кадр анимации
-            requestAnimationFrame(updateCircles);
-        }
-        // Добавляем обработчик события клика по канвасу
-        canvas.addEventListener("click", onCanvasClick);
-        // Запускаем функцию обновления кругов
-        updateCircles();
-    </script>
+        <canvas id="canvas" width="2560" height="1440" style="background-color: #000000;"></canvas>
+
+    <script src="script.js"></script>
 </body>
 </html>
